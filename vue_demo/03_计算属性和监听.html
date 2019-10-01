@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        姓：<input type="text" placeholder="first name" v-model="first_name"/><br>
+        名：<input type="text" placeholder="last name" v-model="last_name"/><br>
+        姓名1  <input type="text" v-model="full_name"><br>
+        姓名2 <input type="text" ><br>
+        姓名3 <input type="text" >
+
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            first_name: 'aa',
+            last_name: "bb"
+        },
+        computed: {
+            full_name(){
+                return this.first_name + "" + this.last_name
+            }
+        },
+    })
+    
+
+</script>

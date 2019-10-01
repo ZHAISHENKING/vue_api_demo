@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <p>{{msg}}</p>
+        <p>{{msg.toUpperCase()}}</p>
+        <pre>{{msg}}</pre>
+        <img :src="imgUrl" alt="什么都没有">
+        <a :href="imgUrl">aaa</a>
+        <button @click="cl">点击打印</button>
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            msg: '<a href="https://www.baidu.com">百度</a>',
+            imgUrl: "https://cn.vuejs.org/images/logo.png"
+        },
+        methods: {
+            cl(){
+                console.log("123")
+            }
+        },
+    })
+    
+
+</script>
