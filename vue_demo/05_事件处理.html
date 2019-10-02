@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h2>事件监听</h2>
+        <button @click="test1">test1</button>
+        <button @click="test2('aaa')">test2</button>
+        <button @click="test3">test3</button>
+        <h3>事件修饰符</h3>
+        <div @click="test4" style="width:200px; height:200px; background:blue"> 
+            <div @click.stop="test5" style="width:100px; height:100px; background:red"></div>
+        </div>
+        <a href="https://www.baidu.com" @click.prevent="test6">百度</a>
+        <h3>按键修饰符</h3>
+        <input type="text" @keyup.13="test7">
+        <input type="text" @keyup.enter="test7">
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            
+        },
+        methods: {
+            test1(){
+                console.log("test1")
+            },
+            test2(msg){
+                console.log(msg)
+            },
+            test3(event){
+                console.log(event.target.innerHTML)
+            },
+            test4(){
+                alert("out")
+            },
+            test5(){
+                alert("inner")
+            },
+            test6(){
+                alert("不去百度")
+            },
+            test7(event){
+                console.log(event.target.value)
+            }
+        },
+        
+    })
+    
+
+</script>
