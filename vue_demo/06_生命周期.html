@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="destoryVM">destroy vm</button>
+        <p v-show="isShow">宅神最帅</p>
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        data: {
+            isShow: true
+        },
+        beforeCreate() {
+            alert(this.isShow) // none
+            console.log("实例创建前, 即vm实例没有创建，此时无法读取到vm中的data")
+        },
+        created() {
+            console.log(this.isShow)
+            console.log("实例创建后, 此时vm实例已创建， 可以读取到data")
+        }, 
+        beforeMount() {
+            let html = document.getElementById("app")
+            console.log(html.innerHTML)
+            console.log("还没开始加载")
+        },
+        mounted() {
+            let html = document.getElementById("app")
+            console.log(html.innerHTML)
+            console.log("加载完毕")
+        },
+        beforeDestroy() {
+            console.log("实例销毁前")
+        },
+        destroyed() {
+            console.log("实例销毁后")
+        },
+        methods: {
+            destoryVM(){
+                this.$destroy()
+            }
+        },
+    })
+    
+</script>
