@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h2>显示格式化的日期事件</h2>
+        <p>{{date}}</p>
+        <p>{{date | dateString}}</p>
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script type="text/javascript">
+    Vue.filter('dateString', (value, format) => {
+        return moment(value).format("YYYY-MM-DD HH:mm:ss") 
+    })
+    new Vue({
+        el: "#app",
+        data: {
+            date: new Date()
+        },
+    })
+    
+    
+
+</script>
