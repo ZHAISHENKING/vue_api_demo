@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    [v-cloak]{
+        display: none;
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <p ref="content">github.com</p>
+        <button @click="hint">提示</button>
+        <p v-cloak>{{msg}}</p>
+    </div>
+    <div id="test1">
+        <p v-upper-text="msg1"></p>
+        <p v-lower-text="msg1"></p>
+    </div>
+    <div id="test2">
+        <p v-upper-text="msg2"></p>
+        <p v-lower-text="msg2"></p>
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/moment.js/2.21.0/moment.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: "#app",
+        data: {
+            msg: "aaa"
+        },
+        methods: {
+            hint() {
+                alert(this.$refs.content.textContent)
+            }
+        }
+    })
+
+    // 自定义指令 v-upper-text
+    // 全局指令
+    Vue.directive('upper-text', (el, binding) => {
+        el.textContent = binding.value.toUpperCase()
+    })
+
+    new Vue({
+        el: "#test1",
+        data: {
+            msg1: "aaabc",
+        }
+    })
+
+    new Vue({
+        el: "#test2",
+        data: {
+            msg2: "cccdb"
+        },
+        // 局部指令， 只在test2内有效
+        directives: {
+            'lower-text'(el, binding){
+                el.textContent = binding.value.toLowerCase()
+            }
+        }
+    })
+    
+    
+
+</script>
