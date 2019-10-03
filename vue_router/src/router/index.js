@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import About from '../views/About.vue'
 import Home from '../views/Home.vue'
 import Messages from '../views/Messages'
+import MessageDetail from '../views/MessageDetail'
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,10 @@ export default new VueRouter({
             children: [
                 {
                     path: 'message',
-                    component: Messages
+                    component: Messages,
+                    children:[
+                        {path: 'detail/:id', component: MessageDetail}
+                    ]
                 }
             ]
         },
