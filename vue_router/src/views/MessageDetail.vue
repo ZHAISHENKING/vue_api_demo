@@ -31,7 +31,6 @@ export default {
     watch: {
         $route: function(value) {
             const id = value.params.id*1;
-            console.log(id);
             this.array = this.detailArray.find(detail => detail.id === id)
         }
     },
