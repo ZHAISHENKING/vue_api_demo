@@ -7,13 +7,16 @@
     <title>Document</title>
 </head>
 <body>
-    <div> id="app"</div>
+    <div id="app"></div>
 </body>
 </html>
-<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="../mvvm/mvvm.js"></script>
+<script src="../mvvm/watcher.js"></script>
+<script src="../mvvm/compile.js"></script>
+<script src="../mvvm/observer.js"></script>
 <script>
 // 数据代理 操作vm.name 实际是操作的vm中的data
-const vm = new Vue({
+const vm = new MVVM({
     el: "#app",
     data: {
         name: "feifei"
