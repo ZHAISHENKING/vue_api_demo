@@ -1,10 +1,15 @@
 function Compile(el, vm) {
+    // 保存vm到compile对象
     this.$vm = vm;
+    // 将el对应的元素对象保存到compile对象中
     this.$el = this.isElementNode(el) ? el : document.querySelector(el);
-
+    // 如果有el 对象
     if (this.$el) {
+        // 1. 取出el元素中所有子节点保存到一个fragment对象中
         this.$fragment = this.node2Fragment(this.$el);
+        // 2. 编译fragment中所有层次子节点
         this.init();
+        // 3. 将编译好的fragment添加到页面的el元素中
         this.$el.appendChild(this.$fragment);
     }
 }
@@ -12,6 +17,7 @@ function Compile(el, vm) {
 Compile.prototype = {
     constructor: Compile,
     node2Fragment: function(el) {
+        // 1. 创建空的 fragment对象
         var fragment = document.createDocumentFragment(),
             child;
 
@@ -24,24 +30,35 @@ Compile.prototype = {
     },
 
     init: function() {
+        // 编译指定元素（所有层次的子节点）
         this.compileElement(this.$fragment);
     },
 
     compileElement: function(el) {
+        // 取出最外层所有子节点
         var childNodes = el.childNodes,
+            // 保存compile对象
             me = this;
 
+        // 遍历所有子节点(text/element)
         [].slice.call(childNodes).forEach(function(node) {
+            // 得到节点的文本内容
             var text = node.textContent;
+            // 创建正则对象（匹配大括号表达式）
             var reg = /\{\{(.*)\}\}/;
 
+            // 判断节点是否是一个元素节点
             if (me.isElementNode(node)) {
+                // 编译指令
                 me.compile(node);
 
+            // 判断节点是否是大括号格式的文本节点
             } else if (me.isTextNode(node) && reg.test(text)) {
+                // 编译文本节点
                 me.compileText(node, RegExp.$1.trim());
             }
 
+            // 如果当前节点还有子节点，通过递归调用实现所有层次节点的编译
             if (node.childNodes && node.childNodes.length) {
                 me.compileElement(node);
             }
@@ -92,15 +109,19 @@ Compile.prototype = {
 };
 
 // 指令处理集合
+// 包含多个解析指令的方法的工具对象
 var compileUtil = {
+    // 解析v-text/ {{}}
     text: function(node, vm, exp) {
         this.bind(node, vm, exp, 'text');
     },
 
+    // 解析v-html
     html: function(node, vm, exp) {
         this.bind(node, vm, exp, 'html');
     },
 
+    // 解析v-model
     model: function(node, vm, exp) {
         this.bind(node, vm, exp, 'model');
 
@@ -117,13 +138,15 @@ var compileUtil = {
         });
     },
 
+    // 解析v-class
     class: function(node, vm, exp) {
         this.bind(node, vm, exp, 'class');
     },
 
     bind: function(node, vm, exp, dir) {
+        // 得到更新节点的函数
         var updaterFn = updater[dir + 'Updater'];
-
+        // 调用函数更新节点
         updaterFn && updaterFn(node, this._getVMVal(vm, exp));
 
         new Watcher(vm, exp, function(value, oldValue) {
@@ -141,6 +164,7 @@ var compileUtil = {
         }
     },
 
+    // 从vm中得到表达式所对应的值， 可能会有多层
     _getVMVal: function(vm, exp) {
         var val = vm;
         exp = exp.split('.');
@@ -164,12 +188,14 @@ var compileUtil = {
     }
 };
 
-
+// 包含多个更新节点的方法的工具对象
 var updater = {
+    // 更新节点的textContent属性值
     textUpdater: function(node, value) {
         node.textContent = typeof value == 'undefined' ? '' : value;
     },
 
+    // 更新节点的innerHTML属性值
     htmlUpdater: function(node, value) {
         node.innerHTML = typeof value == 'undefined' ? '' : value;
     },
