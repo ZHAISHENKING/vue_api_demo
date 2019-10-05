@@ -216,7 +216,7 @@ var updater = {
         className = className.replace(oldValue, '').replace(/\s$/, '');
 
         var space = className && String(value) ? ' ' : '';
-
+        // 将静态class属性的值与动态class值合并后设置为新的class值
         node.className = className + space + value;
     },
 
