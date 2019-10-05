@@ -9,6 +9,7 @@
 <body>
     <div id="app">
         <p>{{name}}</p>
+        <button v-on:click="show">展示</button>
     </div>
 </body>
 </html>
@@ -22,6 +23,11 @@ const vm = new MVVM({
     el: "#app",
     data: {
         name: "feifei"
+    },
+    methods:{
+        show (){
+            alert(this.name)
+        }
     }
 })
 console.log(vm.name, vm)
