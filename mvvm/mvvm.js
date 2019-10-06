@@ -13,7 +13,7 @@ function MVVM(options) {
     });
 
     this._initComputed();
-
+    // 对data中所有层次的属性通过数据劫持实现数据绑定
     observe(data, this);
 
     // 创建编译对象
