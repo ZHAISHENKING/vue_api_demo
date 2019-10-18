@@ -20,6 +20,9 @@
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
 <script>
+    /*
+    对于输入框change事件调用ajax请求的情况非常好用， 避免请求过多造成资源浪费
+    */
 let watchExampleVM = new Vue({
   el: '#watch-example',
   data: {

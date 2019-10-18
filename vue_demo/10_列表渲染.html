@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="watch-example">
+        <ul>
+          <li v-for="(i,index) in items" :key="index">{{i}} - {{index}}</li>
+        </ul>
+        <ul>
+          <li v-for="(item, index) in item1" :index="index" :key="index">{{item.name}}</li>
+        </ul>
+        <ul>
+          <li v-for="(value, key, index) in obj" >{{key}} - {{value}} - {{index}}</li>
+        </ul>
+      </div>
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+    /*
+      v-for 遍历列表时 一个参数是列表的元素，两个参数分别是 元素，索引
+      遍历对象时 一个参数是键值对， 两个参数是值，键  三个参数 值，键，索引
+    */
+let watchExampleVM = new Vue({
+  el: '#watch-example',
+  data: {
+    items: [1,2,3,4,5,6,7],
+    item1: [{name: "2", id: 1}, {name: "3", id: 2}, {name: "4", id: 3}],
+    obj: {
+      name: "aa",
+      age: 13,
+      hobby: "唱跳rap"
+    }
+  },
+  
+  methods: {
+    
+  }
+})
+</script>
