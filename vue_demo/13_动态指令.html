@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+
+</style>
+<body>
+    <div id="app">
+        <p v-pin:[direction]="200">我被固定在页面上了</p>
+    </div>
+</body>
+</html>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+/*
+    自定义指令动态参数
+    通过动态修改自定义指令的参数值实现页面上不同效果
+    例： 自定义指令v-pin， 通过附带参数来实现被绑定的元素节点fixed固定定位， left或top
+*/
+
+new Vue({ 
+  el: '#app',
+  data(){ return {direction: 'top'}},
+  directives: {
+      pin: {
+          bind: (el, binding, vnode) => {
+              el.style.position = 'fixed'
+              let s = (binding.arg == 'left' ? 'left' : 'top')
+              el.style[s] = binding.value + 'px'
+          }
+      }
+  }
+})
+</script>
