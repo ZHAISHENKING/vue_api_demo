@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script>
+/*
+    通过一个最简单的vuex示例来了解其原理
+    需要改变state的值时， 通过commit提交来触发mutations中的add方法，从而更新state
+*/
+const store = new Vuex.Store({
+    state: {count: 0},
+    mutations: {
+        add(state){state.count++}
+    }
+})
+
+store.commit('add')
+console.log(store.state.count)
+</script>
