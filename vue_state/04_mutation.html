@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script>
+/*
+    vuex要改变state， 需commit mutations
+    mutations接收两个参数 state，payload（附加参数）
+    store.commit() 提供需提供两个参数 type 事件类型字符串  payload, 附加参数
+    大型应用可以将type事件类型  放置在单独js文件中， 声明为常量   这样方便团队浏览mutation
+*/
+
+// mutation-type.js
+const ADD = 'ADD'
+const store = new Vuex.Store({
+    state: {firstName: 'hello', lastName: 'world', count: 0},
+    mutations: {
+        [ADD](state, payload){state.count+=payload}
+    }
+})
+const mapState = Vuex.mapState
+const mapMutations = Vuex.mapMutations
+
+new Vue({
+    el: '#app',
+    store,
+    computed: {
+        ...mapState(['count']),
+    },
+    created() {
+        this.ADD(10)
+        console.log(this.count);
+    },
+    methods: {
+        // 将 this.$store.commit('ADD', payload) 映射为 this.ADD(payload)
+        ...mapMutations(['ADD'])
+    },
+})
+
+
+</script>
