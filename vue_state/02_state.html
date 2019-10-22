@@ -19,13 +19,20 @@
     在01的基础上 声明了一个子组件vv, 在根组件实例中注册了store
     分别在根组件和子组件方法中输出 this.$store.state.count
     都会输出0
+
+    多个属性需要声明时， 使用Vuex中的mapState可以简化写法
+    下面这三种写法作用相同,都是声明count状态
+    mapState({count: state=> state.count})
+    mapState({count: 'count'})
+    mapState(['count'])
 */
 const store = new Vuex.Store({
-    state: {count: 0},
+    state: {count: 0, age: 1, price: 10},
     mutations: {
         add(state){state.count++}
     }
 })
+const mapState = Vuex.mapState
 
 const vv = Vue.component('vv',{
     created(){
@@ -40,8 +47,14 @@ new Vue({
     component:{
         vv
     },
+    computed: mapState([
+        'age',
+        'count',
+        'price',
+    ]),
     created() {
         console.log(this.$store.state.count)
+        console.log(this.price, this.age)
     },
 })
 
