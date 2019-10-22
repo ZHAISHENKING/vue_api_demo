@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input v-model="msg">
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script>
+/*
+    当双向绑定的数据对象为vuex的state时，因为mutation不能直接修改值就会引发报错，
+    这个时候的做法可以给计算属性添加get和set方法，
+    当修改v-model绑定的值时，会触发set方法，手动commit mutation引发state更新
+    这样既能更新值也不会冲突vuex的规则
+    get方法返回this.$store.state.message
+*/
+const changeValue = 'changeValue'
+const StorageKey = "key"
+const myPlugin = store => {
+    // 传入两个参数 mutation, state 如果不需要可以不传
+    store.subscribe(() => {
+        console.log("调用插件了")
+        // 每次mutation后调用
+        let data = store.state
+        // 状态锁定， 不记录
+        if (data.lock) return
+        // 格式化处理，节省资源且操作安全
+        data = JSON.stringify(data)
+        data = encodeURIComponent(data)
+        // base64编码
+        if (window.btoa) data = btoa(data)
+        window.localStorage.setItem(StorageKey, data)
+    })
+}
+
+const lastState = () => {
+  // 获取状态
+  let data = window.localStorage.getItem(StorageKey)
+  if (!data) return false
+  try {
+    if (window.btoa) data = atob(data)
+    data = decodeURIComponent(data)
+    data = JSON.parse(data)
+  } catch (e) {
+    if (window.console || window.console.error) {
+      window.console.error('读取记录错误:', e)
+    }
+    return false
+  }
+  return data
+}
+
+const store = new Vuex.Store({
+    state: {message: ""},
+    plugins: [myPlugin],
+    mutations: {
+        [changeValue](state, payload){state.message = payload}
+    }
+})
+
+const {mapState, mapMutations, mapActions, mapGetters} = Vuex
+
+new Vue({
+    el: '#app',
+    store,
+    computed: {
+        msg:{
+            get(){
+                return this.$store.state.message
+            },
+            set(value){
+                this.$store.commit("changeValue", value)
+            }
+        }
+    },
+    methods: {
+        // 将 this.$store.commit('ADD', payload) 映射为 this.ADD(payload)
+        ...mapMutations(['changeValue']),
+    },
+    created() {
+        const state = lastState()
+        if(state.message) this.msg = state.message
+    },
+})
+
+
+</script>
