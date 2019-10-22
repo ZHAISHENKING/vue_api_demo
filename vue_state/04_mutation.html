@@ -44,7 +44,7 @@ new Vue({
         console.log(this.count);
     },
     methods: {
-        // 将 this.$store.commit('ADD', payload) 映射为 this.ADD(payload)
+        // 将this.ADD(payload) 映射为 this.$store.commit('ADD', payload) 
         ...mapMutations(['ADD'])
     },
 })

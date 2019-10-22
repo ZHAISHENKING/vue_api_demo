@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="addSync">异步加</button>
+        <button @click="ADD">加</button>
+        <h1>{{count}}</h1>
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script>
+/*
+    action与mutation做的事情看起来一样，
+    action接收参数为context对象, 下面两种写法作用相同
+    addSync(context){context.commit('ADD', 1)}
+    addSync({commit}){commit('ADD', 1)}
+    实际是为了解决mutation不支持异步的问题，使用context.dispatch来触发mutation执行
+    ...mapActions实际上是将methods方法 this.addSync映射为
+    this.$store.dispatch('addSync')
+*/
+
+// mutation-type.js
+const ADD = 'ADD'
+const store = new Vuex.Store({
+    state: {firstName: 'hello', lastName: 'world', count: 0},
+    mutations: {
+        [ADD](state){state.count++}
+    },
+    actions: {
+        addSync({commit}){
+            setTimeout(()=>{
+                commit('ADD', 1)
+            }, 1000)
+        }
+    }
+})
+const mapState = Vuex.mapState
+const mapMutations = Vuex.mapMutations
+const mapActions = Vuex.mapActions
+
+new Vue({
+    el: '#app',
+    store,
+    computed: {
+        ...mapState(['count']),
+    },
+
+    methods: {
+        // 将 this.$store.commit('ADD', payload) 映射为 this.ADD(payload)
+        ...mapMutations(['ADD']),
+        ...mapActions(['addSync'])
+    },
+})
+
+
+</script>

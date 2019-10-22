@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script>
+/*
+    由于vuex是单一状态树，所以当应用较大时，难免会出现store对象难以维护的场景
+    vuex提供了module，每个模块有自己的state, mutation, action等
+
+    在组件中要访问module中的state时，声明如下
+    mapState({
+        aa: state=>state.模块名.aa
+    })
+
+    调用mutaiton和action则不需要这么麻烦 vuex会自动把模块下的actions和mutations合并到
+    store根实例中
+*/
+const ADD = 'ADD'
+const mdA = {
+    state: {aa: 17, bb: '456'},
+    actions: {
+        addRoot({state, commit, rootState}){
+            // rootState为根实例中的state
+            if(state.aa + rootState.count === 27){
+                commit('ADD')
+            }
+        }
+    }
+}
+
+const mdB = {
+    state: {cc: 'kkk', dd: 'qqq'},
+    getters: {
+        ccanddd(state){
+            return state.cc+state.dd
+        }
+    }
+}
+
+const store = new Vuex.Store({
+    state: {firstName: 'hello', lastName: 'world', count: 10},
+    mutations: {
+        [ADD](state){
+            state.count++
+        }
+    },
+    modules: {
+        mda: mdA,
+        mdb: mdB
+    }
+})
+
+// 变量解构赋值
+const {mapState, mapMutations, mapActions, mapGetters} = Vuex
+
+new Vue({
+    el: '#app',
+    store,
+    computed: {
+        ...mapState({
+            count: 'count',
+            aa: state=>state.mda.aa
+        }),
+        ...mapGetters([
+            'ccanddd'
+        ])
+    },
+    created() {
+        this.addRoot()
+        console.log(this.aa, this.ccanddd, this.count); // 17 'kkkqqq' 11
+    },
+    methods: {
+        // 将 this.$store.commit('ADD', payload) 映射为 this.ADD(payload)
+        ...mapMutations(['ADD']),
+        ...mapActions(['addRoot'])
+    },
+})
+
+
+</script>
