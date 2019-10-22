@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script>
+/*
+    vuex中的‘计算属性’ getters， 访问时可以使用mapGetters声明
+*/
+
+const store = new Vuex.Store({
+    state: {firstName: 'hello', lastName: 'world'},
+    getters: {
+        fullName(state){
+            return state.firstName + state.lastName
+        }
+    },
+    mutations: {
+        add(state){state.count++}
+    }
+})
+const mapGetters = Vuex.mapGetters
+const mapState = Vuex.mapState
+
+new Vue({
+    el: '#app',
+    store,
+    computed: {
+        ...mapState([
+            'firstName', 'lastName'
+        ]),
+        ...mapGetters([
+            'fullName'
+        ])
+    },
+    created() {
+        console.log(this.firstName, this.lastName)
+        console.log(this.fullName)
+    },
+})
+
+
+</script>
