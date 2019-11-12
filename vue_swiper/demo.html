@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+    <style>
+    ul{list-style: none; margin:0; padding:0;}
+    #app{display:flex;align-items:center;flex-flow: column;}
+    header li{float:left; width:100px;height:30px;background:#ccc;color:#fff;line-height:30px;text-align:center;cursor:pointer}
+    .content ul{width:400px; height:400px;background:#999}
+    .content li{float:left; width:200px; margin: 0}
+    .unit-title-active{
+        color:#00F7A1;
+        font-weight:bold;
+      }
+    .swiper-container{
+        background: #999;
+        width:400px;
+        height:400px;
+        position: relative;
+    }
+    .swiper-pagination-bullet-custom {
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      border-radius: 50%;
+      background-color: #59BAF2;
+      opacity: 0.3;
+      margin-left:12px;
+    }
+    .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets {
+      bottom: 7px;
+      height:12px;
+      left: 0;
+      width: 100%;
+    }
+    .swiper-container-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet {
+      margin: 0 6px;
+    }
+    .swiper-pagination-bullet-custom, .swiper-pagination-bullet-active {
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      border-radius: 50%;
+      background-color: #59BAF2;
+      opacity: 0.3;
+      margin-left:12px;
+    }
+    .swiper-pagination-bullet-active {opacity: 1;}
+    </style>  
+</head>
+<body>
+    <div id="app">
+        <header>
+            <ul>
+                <li 
+                    v-for="(i,index) in menuList"
+                    :key="index"
+                    @click="handleChange(index)"
+                    :class="{'unit-title-active': now === index}"
+                >
+                    {{i}}
+                </li>
+            </ul>
+        </header>
+        <div class="content">
+                <swiper :options="swiperOption" ref="mySwiper">
+                <!-- slides -->
+                <swiper-slide 
+                    v-for="(item, index) in slideList" :key="index"
+                    v-if="slideList.length>0"
+                    >
+                    <span class="name">{{item.name}}</span>
+                    <span class="count">{{item.count}}</span>
+                </swiper-slide>
+                <div class="swiper-pagination"  slot="pagination"></div>
+                </swiper>
+        </div>
+    </div>
+</body>
+</html>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
+<script src="https://unpkg.com/swiper/js/swiper.min.js"> </script>
+<script src="https://cdn.jsdelivr.net/npm/vue-awesome-swiper@3.1.2/dist/vue-awesome-swiper.js"></script>
+<script>
+/**
+    vue-swiper使用示例
+    完成功能，点击菜单 异步加载轮播内容
+    问题：
+    - 当轮播内容分组且异步加载时loop不生效
+    - 菜单切换时 如果轮播只有一页，下一个菜单内容有多页时会停止轮播，此时应判断加载页数手动开启/停止轮播
+*/
+Vue.use(VueAwesomeSwiper)
+const vm = new Vue({
+    el: '#app',
+    components:{
+        swiper: VueAwesomeSwiper.swiper,
+        swiperSlide: VueAwesomeSwiper.swiperSlide
+    },
+    data(){
+        return {
+            /** 轮播组件配置 */
+            swiperOption: {
+                // 设置自动轮播间隔
+                autoplay: {
+                    delay: 1000
+                },
+                // 容器能够同时显示的slides数量
+                slidesPerView: 3,
+                // 定义slides的数量多少为一组
+                slidesPerGroup: 3,
+                // 分页器配置
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    renderBullet (index, className) {
+                        return `<span class="${className} swiper-pagination-bullet-custom"></span>`
+                    }
+                }
+            },
+            /** 其他data数据 */
+            now: 0,
+            timer: null,
+            menuList: ['menu1', 'menu2', 'menu3', 'menu4'],
+            slideList: [],
+            asyncData: [
+                [
+                    {"name": "黄焖鸡", "count":1},
+                    {"name": "鸡", "count":2},
+                    {"name": "黄焖鸡", "count":1},
+                    {"name": "油爆大虾", "count":1},
+                    {"name": "黄焖鸡", "count":1},
+                    {"name": "黄焖鸡", "count":1}
+                ],
+                [
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2}
+                ],
+                [{"name": "瓦罐汤", "count":3}],
+                [{"name": "芝麻饼", "count":4}],
+            ]
+        }
+    },
+    computed: {
+        myswiper () {
+            return this.$refs.mySwiper.swiper
+        }
+    },
+    methods: {
+        // 切换菜单
+        handleChange(i){
+            clearInterval(this.timer)
+            this.initSlide(i)
+            this.initMenu(i)
+        },
+        // 初始化轮播
+        initSlide(index=0){
+            this.now = index
+            this.slideList = this.asyncData[index]
+            if (this.slideList.length>this.swiperOption.slidesPerView){
+                this.myswiper.autoplay.start()
+            }else this.myswiper.autoplay.stop()
+        },
+        // 初始化菜单轮播
+        initMenu(i=0){
+            let index = i
+            this.timer = setInterval(()=>{
+                index += 1
+                if (index === this.menuList.length) index = 0
+                this.initSlide(index)
+            },5000)
+        }
+    },
+    mounted() {
+        if (this.asyncData.length > 0) {
+            this.slideList = this.asyncData[0]
+        }
+        this.initSlide()
+        this.initMenu()
+    },
+})
+</script>
