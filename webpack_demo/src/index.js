@@ -2,6 +2,10 @@ import { cube } from './main.js'
 import printMe from './print'
 import './styles.css'
 
+if (process.env.NODE_ENV !== 'production') {
+  console.log('看起来我们好像在开发模式')
+}
+
 function component() {
     // var element = document.createElement('div');
     var element = document.createElement('pre');
