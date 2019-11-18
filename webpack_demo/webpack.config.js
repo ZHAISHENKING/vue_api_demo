@@ -1,6 +1,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const webpack = require('webpack')
 
 // module.exports = {
 //     entry: './src/index.js',
@@ -62,15 +63,17 @@ module.exports = {
      * 然后修改 output，以便根据入口起点名称动态生成 bundle 名称
     */
    entry: {
-       app: './src/index.js',
-       print: './src/print.js'
+    //    app: './src/index.js',
+    //    print: './src/print.js'
+        app: './src/index.js'
    },
    /** 开发工具，追踪源代码错误位置 */
    devtool: 'inline-source-map',
    /** 告知 webpack-dev-server，在 localhost:8080 下建立服务
     * 将 dist 目录下的文件，作为可访问文件 */
    devServer: {
-       contentBase: './dist'
+       contentBase: './dist',
+       hot: true
    },
    /** 
     * 使用HtmlWebpackPlugin解决
@@ -81,7 +84,9 @@ module.exports = {
        new CleanWebpackPlugin(),
        new HtmlWebpackPlugin({
            title: 'Output Management'
-       })
+       }),
+       new webpack.NamedModulesPlugin(),
+       new webpack.HotModuleReplacementPlugin()
    ],
     output: {
         filename: '[name].bundle.js',
