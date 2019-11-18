@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/print.js"],"names":["console","log"],"mappings":"wFAAA,OAAe,eACXA,QAAQC,IAAI","file":"print.bundle.js","sourcesContent":["export default () => {\n    console.log('按钮已点击')\n}"],"sourceRoot":""}

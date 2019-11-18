@@ -1,39 +1,23 @@
-import { cube } from './main.js'
-import printMe from './print'
-import './styles.css'
-
-if (process.env.NODE_ENV !== 'production') {
-  console.log('看起来我们好像在开发模式')
-}
+import _ from 'lodash';
 
 function component() {
-    // var element = document.createElement('div');
-    var element = document.createElement('pre');
-    
-    element.innerHTML = [
-      'hello webpack',
-      '5 cubed is equal to ' + cube(5)
-    ].join('\n\n')
-    return element;
-  }
-  
-  // document.body.appendChild(component());
-  
-  /**  
-   * 问题： 当启用模块热更新后，发现点击页面中的按钮，执行的还是旧的结果，
-   * 为了让它与 HMR 正常工作，我们需要使用 module.hot.accept 更新绑定到新的 printMe 函数上
-  */
+  var element = document.createElement('div');
+  var button = document.createElement('button');
+  var br = document.createElement('br');
 
- let element = component();
- document.body.appendChild(element);
+  button.innerHTML = '点我 查看控制台!';
+  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+  element.appendChild(br);
+  element.appendChild(button);
 
-  // 启用HMR模块热更新
-  if (module.hot){
-    module.hot.accept('./print.js', ()=>{
-      console.log('printMe 模块更新')
-      // printMe();
-      document.body.removeChild(element);
-      element = component();
-      document.body.appendChild(element);
-    })
-  }
+  // Note that because a network request is involved, some indication
+  // of loading would need to be shown in a production-level site/app.
+  button.onclick = () => import(/* webpackChunkName: "print" */ './print').then(module => {
+    var print = module.default;
+    print()
+  })
+
+  return element;
+}
+
+ document.body.appendChild(component());

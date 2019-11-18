@@ -6,7 +6,7 @@ const path = require('path');
 
  module.exports = {
    entry: {
-     app: './src/index.js'
+     index: './src/index.js'
    },
    plugins: [
      new CleanWebpackPlugin(),
@@ -16,6 +16,8 @@ const path = require('path');
    ],
    output: {
      filename: '[name].bundle.js',
+     // 决定非入口 chunk 的名称
+     chunkFilename: '[name].bundle.js',
      path: path.resolve(__dirname, 'dist')
    },
    module: {
