@@ -67,6 +67,11 @@ module.exports = {
    },
    /** 开发工具，追踪源代码错误位置 */
    devtool: 'inline-source-map',
+   /** 告知 webpack-dev-server，在 localhost:8080 下建立服务
+    * 将 dist 目录下的文件，作为可访问文件 */
+   devServer: {
+       contentBase: './dist'
+   },
    /** 
     * 使用HtmlWebpackPlugin解决
     * 入口文件名修改，index.html仍引用原入口文件打包的文件的问题
@@ -80,7 +85,8 @@ module.exports = {
    ],
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
     },
     module: {
         rules: [
