@@ -109,5 +109,6 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+    mode: "production"
 }

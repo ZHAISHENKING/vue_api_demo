@@ -1,18 +1,15 @@
-import _ from 'lodash'
+import { cube } from './main.js'
 import printMe from './print'
 import './styles.css'
 
 function component() {
-    var element = document.createElement('div');
-    var btn = document.createElement('button')
-  
-    // Lodash（目前通过一个 script 脚本引入）对于执行这一行是必需的
-    element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+    // var element = document.createElement('div');
+    var element = document.createElement('pre');
     
-    btn.innerHTML = '点我触发打印'
-    btn.onclick = printMe;
-
-    element.appendChild(btn);
+    element.innerHTML = [
+      'hello webpack',
+      '5 cubed is equal to ' + cube(5)
+    ].join('\n\n')
     return element;
   }
   
