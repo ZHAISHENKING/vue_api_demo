@@ -1,3 +1,3 @@
-export default () => {
-    console.log('按钮已点击')
+export default (text) => {
+    console.log('text')
 }

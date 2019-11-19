@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Print from './print'
 
 function component() {
   var element = document.createElement('div');
@@ -7,15 +8,7 @@ function component() {
 
   button.innerHTML = '点我 查看控制台!';
   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-  element.appendChild(br);
-  element.appendChild(button);
-
-  // Note that because a network request is involved, some indication
-  // of loading would need to be shown in a production-level site/app.
-  button.onclick = () => import(/* webpackChunkName: "print" */ './print').then(module => {
-    var print = module.default;
-    print()
-  })
+  // element.onclick = Print.bind(null, 'hello webpack!')
 
   return element;
 }

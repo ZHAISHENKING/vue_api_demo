@@ -65,7 +65,10 @@ module.exports = {
    entry: {
     //    app: './src/index.js',
     //    print: './src/print.js'
-        app: './src/index.js'
+        main: './src/index.js',
+        vendors: [
+            'lodash'
+        ]
    },
    /** 开发工具，追踪源代码错误位置 */
    devtool: 'inline-source-map',
@@ -83,13 +86,30 @@ module.exports = {
    plugins: [
        new CleanWebpackPlugin(),
        new HtmlWebpackPlugin({
-           title: 'Output Management'
+        //    title: 'Output Management'
+        title: 'caching'
        }),
+       new webpack.HashedModuleIdsPlugin(),
        new webpack.NamedModulesPlugin(),
        new webpack.HotModuleReplacementPlugin()
    ],
+   optimization:{
+       splitChunks: {
+        cacheGroups: {
+            commons: {
+                chunks: 'all',
+                minChunks: 2,
+                name: 'common'
+            }
+        }
+       },
+       runtimeChunk: {
+        name: 'manifest'
+      }
+   },
     output: {
-        filename: '[name].bundle.js',
+        filename: process.env.production === 'production' ? '[name].[chunkhash].js' : '[name].[hash].js',
+        // filename: '[name].[chunkhash].js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
