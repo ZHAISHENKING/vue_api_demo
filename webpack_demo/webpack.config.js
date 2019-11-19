@@ -65,10 +65,7 @@ module.exports = {
    entry: {
     //    app: './src/index.js',
     //    print: './src/print.js'
-        main: './src/index.js',
-        vendors: [
-            'lodash'
-        ]
+        main: './src/index.js'
    },
    /** 开发工具，追踪源代码错误位置 */
    devtool: 'inline-source-map',
@@ -91,24 +88,11 @@ module.exports = {
        }),
        new webpack.HashedModuleIdsPlugin(),
        new webpack.NamedModulesPlugin(),
-       new webpack.HotModuleReplacementPlugin()
+       new webpack.HotModuleReplacementPlugin(),
+       new webpack.ProvidePlugin({_: "lodash"})
    ],
-   optimization:{
-       splitChunks: {
-        cacheGroups: {
-            commons: {
-                chunks: 'all',
-                minChunks: 2,
-                name: 'common'
-            }
-        }
-       },
-       runtimeChunk: {
-        name: 'manifest'
-      }
-   },
     output: {
-        filename: process.env.production === 'production' ? '[name].[chunkhash].js' : '[name].[hash].js',
+        filename: '[name].js',
         // filename: '[name].[chunkhash].js',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'

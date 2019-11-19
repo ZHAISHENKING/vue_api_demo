@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Print from './print'
 
 function component() {
@@ -8,8 +7,8 @@ function component() {
 
   button.innerHTML = '点我 查看控制台!';
   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-  // element.onclick = Print.bind(null, 'hello webpack!')
-
+  element.onclick = Print.bind(null, 'hello webpack!')
+  element.appendChild(button)
   return element;
 }
 
