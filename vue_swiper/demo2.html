@@ -91,14 +91,47 @@
 <script src="https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js"></script>
 <script src="https://unpkg.com/swiper/js/swiper.min.js"> </script>
 <script src="https://cdn.jsdelivr.net/npm/vue-awesome-swiper@3.1.2/dist/vue-awesome-swiper.js"></script>
+<script src="https://cdn.bootcss.com/rxjs/6.0.0-alpha.3/Rx.min.js"></script>
 <script>
 /**
-    vue-swiper使用示例
+    vue-swiper
     完成功能，点击菜单 异步加载轮播内容
     问题：
-    - 当轮播内容分组且异步加载时loop不生效
     - 菜单切换时 如果轮播只有一页，下一个菜单内容有多页时会停止轮播，此时应判断加载页数手动开启/停止轮播
 */
+
+const getData = function (observer) {
+    const asyncData = [
+                [
+                    {"name": "黄焖鸡", "count":1},
+                    {"name": "鸡", "count":2},
+                    {"name": "黄焖鸡", "count":1},
+                    {"name": "油爆大虾", "count":1},
+                    {"name": "黄焖鸡", "count":1},
+                    {"name": "黄焖鸡", "count":1}
+                ],
+                [
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2},
+                    {"name": "红烧肉", "count":2}
+                ],
+                [{"name": "瓦罐汤", "count":3}],
+                [{"name": "芝麻饼", "count":4}],
+                [{"name": "饼", "count":3}],
+            ]
+    observer.next(asyncData)
+}
+
+const unitData = function () {
+    return Rx.Observable.create(observer => {
+        getData(observer)
+        setInterval(()=>{
+            getData(observer)
+        }, 100000)
+    })
+}
 Vue.use(VueAwesomeSwiper)
 const vm = new Vue({
     el: '#app',
@@ -124,48 +157,37 @@ const vm = new Vue({
                 }
             },
             /** 其他data数据 */
+            size: 3,
             now: 0,
             timer: null,
-            menuList: ['menu1', 'menu2', 'menu3', 'menu4'],
+            menuList: ['menu1', 'menu2', 'menu3', 'menu4', 'menu5'],
             slideList: [],
-            asyncData: [
-                [
-                    {"name": "黄焖鸡", "count":1},
-                    {"name": "鸡", "count":2},
-                    {"name": "黄焖鸡", "count":1},
-                    {"name": "油爆大虾", "count":1},
-                    {"name": "黄焖鸡", "count":1},
-                    {"name": "黄焖鸡", "count":1}
-                ],
-                [
-                    {"name": "红烧肉", "count":2},
-                    {"name": "红烧肉", "count":2},
-                    {"name": "红烧肉", "count":2},
-                    {"name": "红烧肉", "count":2},
-                    {"name": "红烧肉", "count":2}
-                ],
-                [{"name": "瓦罐汤", "count":3}],
-                [{"name": "芝麻饼", "count":4}],
-            ]
+            
         }
     },
     computed: {
         myswiper () {
             return this.$refs.mySwiper.swiper
+        },
+        page () {
+            return Math.ceil(this.slideList.length / this.size)
         }
     },
     methods: {
         // 切换菜单
         handleChange(i){
             clearInterval(this.timer)
+            this.timer = null
             this.initSlide(i)
             this.initMenu(i)
         },
         // 初始化轮播
         initSlide(index=0){
+            console.log(index)
             this.now = index
             this.slideList = this.asyncData[index]
-            if (Math.ceil(this.slideList.length/3)>1){
+            this.myswiper.activeIndex = 0
+            if (this.page > 1){
                 this.myswiper.autoplay.start()
             }else this.myswiper.autoplay.stop()
         },
@@ -180,11 +202,18 @@ const vm = new Vue({
         }
     },
     mounted() {
-        if (this.asyncData.length > 0) {
-            this.slideList = this.asyncData[0]
-        }
-        this.initSlide()
-        this.initMenu()
+        unitData().subscribe({
+            next: (data)=>{
+                console.log('123')
+                this.asyncData = data
+                if (this.asyncData.length > 0) {
+                    this.slideList = this.asyncData[0]
+                }
+                this.initSlide()
+                this.initMenu()
+            }
+        })
+        
     },
 })
 </script>
