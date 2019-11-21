@@ -147,6 +147,7 @@ const vm = new Vue({
                 autoplay: {
                     delay: 1000
                 },
+                observer: true,
                 // 分页器配置
                 pagination: {
                     el: '.swiper-pagination',
@@ -177,16 +178,15 @@ const vm = new Vue({
         // 切换菜单
         handleChange(i){
             clearInterval(this.timer)
-            this.timer = null
             this.initSlide(i)
             this.initMenu(i)
         },
         // 初始化轮播
         initSlide(index=0){
-            console.log(index)
             this.now = index
             this.slideList = this.asyncData[index]
             this.myswiper.activeIndex = 0
+            console.log('slide', this.page, this.myswiper)
             if (this.page > 1){
                 this.myswiper.autoplay.start()
             }else this.myswiper.autoplay.stop()
@@ -204,13 +204,11 @@ const vm = new Vue({
     mounted() {
         unitData().subscribe({
             next: (data)=>{
-                console.log('123')
+                console.log('数据更新')
                 this.asyncData = data
                 if (this.asyncData.length > 0) {
-                    this.slideList = this.asyncData[0]
+                    this.handleChange(0)
                 }
-                this.initSlide()
-                this.initMenu()
             }
         })
         
