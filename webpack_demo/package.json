@@ -16,7 +16,7 @@
   "author": "ZHAISHENKING",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "lodash": "^4.17.15",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.2",
